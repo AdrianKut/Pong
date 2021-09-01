@@ -310,8 +310,9 @@ public class GameManager : MonoBehaviour
 
     public void GameOver(string whoWin)
     {
-        for (int i = 0; i < DifficultyMode.Length; i++)
-            DifficultyMode[i].SetActive(false);
+        if (MenuManager.isVsPlayerGame)
+            for (int i = 0; i < DifficultyMode.Length; i++)
+                DifficultyMode[i].SetActive(false);
 
         isGameOver = true;
         GameOverButton.SetActive(true);
