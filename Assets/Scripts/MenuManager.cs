@@ -1,7 +1,8 @@
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
 using System.Collections;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Advertisements;
@@ -35,8 +36,14 @@ public class MenuManager : MonoBehaviour
     public string gameId = "4179263";
     public string placementId = "baner";
 
+
+
     private void Awake()
     {
+        PlayGamesPlatform.DebugLogEnabled = true;
+        PlayGamesPlatform.Activate();
+
+
         Load();
         if (instance == null)
         {
@@ -47,6 +54,8 @@ public class MenuManager : MonoBehaviour
 
     IEnumerator Start()
     {
+        SignInToGooglePlayServices();
+
         ShowSoundIcon();
         Advertisement.Initialize(gameId);
 
@@ -57,6 +66,55 @@ public class MenuManager : MonoBehaviour
         Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
         Advertisement.Banner.Show(placementId);
 
+    }
+
+    public bool isConnectedToGooglePlayServies;
+    public void SignInToGooglePlayServices()
+    {
+        PlayGamesPlatform.Instance.Authenticate(SignInInteractivity.CanPromptOnce, (result) =>
+        {
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    isConnectedToGooglePlayServies = true;
+                    break;
+                default:
+                    isConnectedToGooglePlayServies = false;
+                    break;
+            }
+        });
+    }
+
+    public void ShowAchievementsGoogleServices()
+    {
+        if (isConnectedToGooglePlayServies)
+            Social.ShowAchievementsUI();
+        ShowAndroidToastMessage("Error network connection!");
+    }
+
+    public void ShowLeaderboardsGoogleServices()
+    {
+        if (isConnectedToGooglePlayServies)
+            Social.ShowLeaderboardUI();
+        else
+            ShowAndroidToastMessage("Error network connection!");
+    }
+
+
+    private void ShowAndroidToastMessage(string message)
+    {
+        AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        AndroidJavaObject unityActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+
+        if (unityActivity != null)
+        {
+            AndroidJavaClass toastClass = new AndroidJavaClass("android.widget.Toast");
+            unityActivity.Call("runOnUiThread", new AndroidJavaRunnable(() =>
+            {
+                AndroidJavaObject toastObject = toastClass.CallStatic<AndroidJavaObject>("makeText", unityActivity, message, 0);
+                toastObject.Call("show");
+            }));
+        }
     }
 
     private void ShowSoundIcon()

@@ -149,12 +149,14 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
     Android: com.AdrianKut.PogPong
+    Standalone: com.AdrianKut.PogPong
+    iPhone: com.AdrianKut.PogPong
   buildNumber:
     Standalone: 0
     iPhone: 0
     tvOS: 0
   overrideDefaultApplicationIdentifier: 0
-  AndroidBundleVersionCode: 4
+  AndroidBundleVersionCode: 5
   AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 29
   AndroidPreferredInstallLocation: 1
@@ -240,7 +242,7 @@ PlayerSettings:
   AndroidTargetArchitectures: 3
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: G:/Adrian/Google Play/user.keystore
+  AndroidKeystoreName: G:/Adrian/user.keystore
   AndroidKeyaliasName: 96
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 0

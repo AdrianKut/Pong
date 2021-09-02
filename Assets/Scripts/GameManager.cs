@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -31,9 +32,10 @@ public class GameManager : MonoBehaviour
     public Animator animator;
     public Animation shakingAnimation;
 
-
+    public Action<int> OnScore;
     private void Awake()
     {
+        OnScore += SendAchivementProgress;
         Application.targetFrameRate = 144;
         isPaused = true;
     }
@@ -278,10 +280,40 @@ public class GameManager : MonoBehaviour
         }
     }
 
+   
     public void IncreaseScore(int amount)
-    {
+    {        
         rightScore++;
+        OnScore(rightScore);
         textRightScore.text = "" + rightScore;
+    }
+
+    private void SendAchivementProgress(int score)
+    {
+        if (MenuManager.instance.isConnectedToGooglePlayServies)
+        {
+            switch (score)
+            {
+                case 25:
+                    Social.ReportProgress(GPGSIds.achievement_25_score, 100.0f, null);
+                    break;
+
+                case 50:
+                    Social.ReportProgress(GPGSIds.achievement_50_score, 100.0f, null);
+                    break;
+
+                case 100:
+                    Social.ReportProgress(GPGSIds.achievement_100_score, 100.0f, null);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            Debug.Log("Not signed in .. unable to report score");
+        }
     }
 
     public void GameOverWallGame()
@@ -295,8 +327,27 @@ public class GameManager : MonoBehaviour
         }
         textRightScore.text = "GAME OVER";
 
+        SendAchivementProgress(rightScore);
+
         if (rightScore > MenuManager.instance.bestScore)
         {
+            if (MenuManager.instance.isConnectedToGooglePlayServies)
+            {
+
+                Debug.Log("Reporting score..");
+                Social.ReportScore(rightScore, GPGSIds.leaderboard_top_score, (success) =>
+                {
+                    if (!success)
+                    {
+                        Debug.LogError("Unable to post highscore!");
+                    }
+                });
+            }
+            else
+            {
+                Debug.Log("Not signed in .. unable to report score");
+            }
+
             middleText.text = "NEW HIGHSCORE!\nYour Score: " + rightScore + "\nBest Score: " + MenuManager.instance.bestScore;
             MenuManager.instance.bestScore = rightScore;
             MenuManager.instance.Save();
