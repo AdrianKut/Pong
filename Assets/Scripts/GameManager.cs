@@ -280,9 +280,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-   
+
     public void IncreaseScore(int amount)
-    {        
+    {
         rightScore++;
         OnScore(rightScore);
         textRightScore.text = "" + rightScore;
@@ -294,6 +294,10 @@ public class GameManager : MonoBehaviour
         {
             switch (score)
             {
+                case 10:
+                    Social.ReportProgress(GPGSIds.achievement_10_score, 100.0f, null);
+                    break;
+
                 case 25:
                     Social.ReportProgress(GPGSIds.achievement_25_score, 100.0f, null);
                     break;
@@ -329,25 +333,23 @@ public class GameManager : MonoBehaviour
 
         SendAchivementProgress(rightScore);
 
-        if (rightScore > MenuManager.instance.bestScore)
+        if (MenuManager.instance.isConnectedToGooglePlayServies)
         {
-            if (MenuManager.instance.isConnectedToGooglePlayServies)
+            Social.ReportScore(rightScore, GPGSIds.leaderboard_top_score, (success) =>
             {
-
-                Debug.Log("Reporting score..");
-                Social.ReportScore(rightScore, GPGSIds.leaderboard_top_score, (success) =>
+                if (!success)
                 {
-                    if (!success)
-                    {
-                        Debug.LogError("Unable to post highscore!");
-                    }
-                });
-            }
-            else
-            {
-                Debug.Log("Not signed in .. unable to report score");
-            }
+                    Debug.LogError("Unable to post highscore!");
+                }
+            });
+        }
+        else
+        {
+            Debug.Log("Not signed in .. unable to report score");
+        }
 
+        if (rightScore > MenuManager.instance.bestScore)
+        {        
             middleText.text = "NEW HIGHSCORE!\nYour Score: " + rightScore + "\nBest Score: " + MenuManager.instance.bestScore;
             MenuManager.instance.bestScore = rightScore;
             MenuManager.instance.Save();

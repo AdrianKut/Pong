@@ -36,13 +36,10 @@ public class MenuManager : MonoBehaviour
     public string gameId = "4179263";
     public string placementId = "baner";
 
-
-
     private void Awake()
     {
         PlayGamesPlatform.DebugLogEnabled = true;
         PlayGamesPlatform.Activate();
-
 
         Load();
         if (instance == null)
@@ -73,23 +70,20 @@ public class MenuManager : MonoBehaviour
     {
         PlayGamesPlatform.Instance.Authenticate(SignInInteractivity.CanPromptOnce, (result) =>
         {
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    isConnectedToGooglePlayServies = true;
-                    break;
-                default:
-                    isConnectedToGooglePlayServies = false;
-                    break;
-            }
+            if (result == SignInStatus.Success)
+                isConnectedToGooglePlayServies = true;
+            else
+                isConnectedToGooglePlayServies = false;
         });
     }
+
 
     public void ShowAchievementsGoogleServices()
     {
         if (isConnectedToGooglePlayServies)
             Social.ShowAchievementsUI();
-        ShowAndroidToastMessage("Error network connection!");
+        else
+            ShowAndroidToastMessage("Couldn't load google services!");
     }
 
     public void ShowLeaderboardsGoogleServices()
@@ -97,24 +91,13 @@ public class MenuManager : MonoBehaviour
         if (isConnectedToGooglePlayServies)
             Social.ShowLeaderboardUI();
         else
-            ShowAndroidToastMessage("Error network connection!");
+            ShowAndroidToastMessage("Couldn't load google services!");
     }
 
 
     private void ShowAndroidToastMessage(string message)
     {
-        AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-        AndroidJavaObject unityActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-
-        if (unityActivity != null)
-        {
-            AndroidJavaClass toastClass = new AndroidJavaClass("android.widget.Toast");
-            unityActivity.Call("runOnUiThread", new AndroidJavaRunnable(() =>
-            {
-                AndroidJavaObject toastObject = toastClass.CallStatic<AndroidJavaObject>("makeText", unityActivity, message, 0);
-                toastObject.Call("show");
-            }));
-        }
+        SSTools.ShowMessage(message, SSTools.Position.bottom, SSTools.Time.oneSecond);
     }
 
     private void ShowSoundIcon()
@@ -185,8 +168,6 @@ public class MenuManager : MonoBehaviour
             SceneManager.LoadScene(1);
         else if (isVsPlayerGame)
             SceneManager.LoadScene(2);
-
-        //this.gameObject.SetActive(false);
     }
 
     [System.Serializable]
