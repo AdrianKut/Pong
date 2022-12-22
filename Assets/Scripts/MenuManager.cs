@@ -14,6 +14,7 @@ public enum Difficulty
     Easy,
     Medium,
     Hard,
+    Extreme
 }
 
 public class MenuManager : MonoBehaviour
@@ -49,7 +50,7 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    IEnumerator Start()
+    void Start()
     {
         SignInToGooglePlayServices();
 
@@ -57,8 +58,8 @@ public class MenuManager : MonoBehaviour
         Advertisement.Initialize(gameId);
 
 
-        while (!Advertisement.IsReady(placementId))
-            yield return null;
+        //while (!Advertisement.IsReady(placementId))
+        //    yield return null;
 
         Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
         Advertisement.Banner.Show(placementId);
@@ -203,6 +204,11 @@ public class MenuManager : MonoBehaviour
                 bestScore = data.bestScore;
             }
         }
+    }
+
+    public void BackToMenu()
+    {
+        SceneManager.LoadScene(0);
     }
 
 }

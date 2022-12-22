@@ -21,4 +21,10 @@ public class GameDifficulty : MonoBehaviour
         MenuManager.instance.currentDifficulty = Difficulty.Hard;
         MenuManager.botMoveSpeed = 1f;
     }
+
+    public void SetHardExtreme()
+    {
+        MenuManager.instance.currentDifficulty = Difficulty.Extreme;
+        MenuManager.botMoveSpeed = 1.4f;
+    }
 }

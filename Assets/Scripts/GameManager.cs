@@ -61,6 +61,9 @@ public class GameManager : MonoBehaviour
                 case Difficulty.Hard:
                     DifficultyMode[2].SetActive(true);
                     break;
+                case Difficulty.Extreme:
+                    DifficultyMode[3].SetActive(true);
+                    break;
             }
         }
     }
