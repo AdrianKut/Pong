@@ -1,16 +1,17 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Advertisements;
-using TMPro.EditorUtilities;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
 public class AdvertManager : MonoBehaviour
 {
     string gameId = "4179263";
     string intersititalAd = "Android_Interstitial";
-    void Start()
+
+    private void OnEnable()
     {
         Advertisement.Initialize(gameId);
+        Advertisement.Load(intersititalAd);
     }
 
     public void ShowInterstitialAd()
