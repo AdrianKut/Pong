@@ -16,6 +16,11 @@ public class AdvertManager : MonoBehaviour
 
     public void ShowInterstitialAd()
     {
+        if( SaveData.Instance.AdsDisabled )
+        {
+            return;
+        }
+
         Advertisement.Show(intersititalAd);
     }
 }

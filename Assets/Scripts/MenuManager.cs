@@ -172,14 +172,14 @@ public class MenuManager : MonoBehaviour
     }
 
     [System.Serializable]
-    class SaveData
+    class SaveDataBestScore
     {
         public int bestScore;
     }
 
     public void Save()
     {
-        SaveData data = new SaveData();
+        SaveDataBestScore data = new SaveDataBestScore();
         data.bestScore = bestScore;
 
         string json = JsonUtility.ToJson(data);
@@ -200,7 +200,7 @@ public class MenuManager : MonoBehaviour
             using (Stream input = File.OpenRead(path))
             {
                 string json = (string)bFormatter.Deserialize(input);
-                SaveData data = JsonUtility.FromJson<SaveData>(json);
+                SaveDataBestScore data = JsonUtility.FromJson<SaveDataBestScore>(json);
                 bestScore = data.bestScore;
             }
         }

@@ -45,24 +45,24 @@ public class GameManager : MonoBehaviour
         pointsToWin = MenuManager.instance.pointToWin;
         botMoveSpeed = MenuManager.botMoveSpeed;
 
-        if (!MenuManager.isWallGame)
+        if( !MenuManager.isWallGame )
             ResetPositionBallAndPlayers();
 
-        if (MenuManager.isVsPlayerGame)
+        if( MenuManager.isVsPlayerGame )
         {
-            switch (MenuManager.instance.currentDifficulty)
+            switch( MenuManager.instance.currentDifficulty )
             {
                 case Difficulty.Easy:
-                    DifficultyMode[0].SetActive(true);
+                    DifficultyMode[0].SetActive( true );
                     break;
                 case Difficulty.Medium:
-                    DifficultyMode[1].SetActive(true);
+                    DifficultyMode[1].SetActive( true );
                     break;
                 case Difficulty.Hard:
-                    DifficultyMode[2].SetActive(true);
+                    DifficultyMode[2].SetActive( true );
                     break;
                 case Difficulty.Extreme:
-                    DifficultyMode[3].SetActive(true);
+                    DifficultyMode[3].SetActive( true );
                     break;
             }
         }
@@ -71,14 +71,14 @@ public class GameManager : MonoBehaviour
     public void LeftScore()
     {
         leftScore++;
-        StartCoroutine(Scored("Left"));
+        StartCoroutine( Scored( "Left" ) );
         textLeftScore.text = "" + leftScore;
     }
 
     public void RightScore()
     {
         rightScore++;
-        StartCoroutine(Scored("Right"));
+        StartCoroutine( Scored( "Right" ) );
         textRightScore.text = "" + rightScore;
 
     }
@@ -86,23 +86,23 @@ public class GameManager : MonoBehaviour
     private void ResetPositionBallAndPlayers()
     {
         Ball.GetComponent<RectTransform>().localPosition = Vector3.zero;
-        playerLeft.GetComponent<RectTransform>().localPosition = new Vector3(-600, 0, 0);
-        playerRight.GetComponent<RectTransform>().localPosition = new Vector3(600, 0, 0);
+        playerLeft.GetComponent<RectTransform>().localPosition = new Vector3( -600, 0, 0 );
+        playerRight.GetComponent<RectTransform>().localPosition = new Vector3( 600, 0, 0 );
     }
 
-    private IEnumerator Scored(string who)
+    private IEnumerator Scored( string who )
     {
-        if (MenuManager.isSoundsOn)
+        if( MenuManager.isSoundsOn )
         {
             Handheld.Vibrate();
-            animator.SetTrigger("shake");
+            animator.SetTrigger( "shake" );
         }
 
         var ballRigid2D = Ball.GetComponent<Rigidbody2D>();
         ballRigid2D.constraints = RigidbodyConstraints2D.FreezeAll;
 
-        yield return new WaitForSeconds(0.3f);
-        if (who == "Left")
+        yield return new WaitForSeconds( 0.3f );
+        if( who == "Left" )
         {
             Ball.GetComponent<Ball>().LaunchAfterLeftScore();
         }
@@ -118,29 +118,29 @@ public class GameManager : MonoBehaviour
         isPaused = true;
 
 
-        if (leftScore == pointsToWin)
-            GameOver("1");
-        else if (rightScore == pointsToWin)
-            GameOver("2");
+        if( leftScore == pointsToWin )
+            GameOver( "1" );
+        else if( rightScore == pointsToWin )
+            GameOver( "2" );
     }
 
     private int backToMenuCounter = 0;
     void Update()
     {
 
-        if (isPaused)
+        if( isPaused )
         {
             ResetPositionBallAndPlayers();
             Time.timeScale = 0;
         }
 
-        if (isGameOver)
+        if( isGameOver )
         {
             isPaused = true;
-            Ball.SetActive(false);
+            Ball.SetActive( false );
         }
 
-        if (Input.anyKey && !(Input.GetKey(KeyCode.Escape)) && !isGameOver)
+        if( Input.anyKey && !(Input.GetKey( KeyCode.Escape )) && !isGameOver )
         {
             middleText.text = "";
             backToMenuCounter = 0;
@@ -149,15 +149,15 @@ public class GameManager : MonoBehaviour
         }
 
 
-        if (Application.platform == RuntimePlatform.Android)
+        if( Application.platform == RuntimePlatform.Android )
         {
-            if (Input.GetKeyUp(KeyCode.Escape) && !isGameOver)
+            if( Input.GetKeyUp( KeyCode.Escape ) && !isGameOver )
             {
                 backToMenuCounter++;
-                if (backToMenuCounter == 2)
+                if( backToMenuCounter == 2 )
                 {
                     Time.timeScale = 1;
-                    SceneManager.LoadScene(0);
+                    SceneManager.LoadScene( 0 );
                 }
                 else
                 {
@@ -172,111 +172,111 @@ public class GameManager : MonoBehaviour
 
     private void MovePlayers()
     {
-        if (MenuManager.isWallGame)
+        if( MenuManager.isWallGame )
         {
-            if (Input.touchCount == 1)
+            if( Input.touchCount == 1 )
             {
-                var touch = Input.GetTouch(0);
-                if (touch.position.x >= 200)
+                var touch = Input.GetTouch( 0 );
+                if( touch.position.x >= 200 )
                 {
-                    if (touch.phase == TouchPhase.Moved)
+                    if( touch.phase == TouchPhase.Moved )
                     {
-                        playerRight.transform.position = new Vector3(playerRight.transform.position.x,
-                           Mathf.Clamp(playerRight.transform.position.y + touch.deltaPosition.y * playerMoveSpeed, -playersYBounds, playersYBounds), playerRight.transform.position.z);
+                        playerRight.transform.position = new Vector3( playerRight.transform.position.x,
+                           Mathf.Clamp( playerRight.transform.position.y + touch.deltaPosition.y * playerMoveSpeed, -playersYBounds, playersYBounds ), playerRight.transform.position.z );
                     }
                 }
             }
 
         }
-        if (MenuManager.isVsBotGame)
+        if( MenuManager.isVsBotGame )
         {
-            if (Input.touchCount == 1)
+            if( Input.touchCount == 1 )
             {
-                var touch = Input.GetTouch(0);
-                if (touch.position.x >= 200)
+                var touch = Input.GetTouch( 0 );
+                if( touch.position.x >= 200 )
                 {
-                    if (touch.phase == TouchPhase.Moved)
+                    if( touch.phase == TouchPhase.Moved )
                     {
-                        playerRight.transform.position = new Vector3(playerRight.transform.position.x,
-                           Mathf.Clamp(playerRight.transform.position.y + touch.deltaPosition.y * playerMoveSpeed, -playersYBounds, playersYBounds), playerRight.transform.position.z);
+                        playerRight.transform.position = new Vector3( playerRight.transform.position.x,
+                           Mathf.Clamp( playerRight.transform.position.y + touch.deltaPosition.y * playerMoveSpeed, -playersYBounds, playersYBounds ), playerRight.transform.position.z );
                     }
                 }
             }
 
-            playerLeft.transform.position = new Vector3(playerLeft.transform.position.x,
-                Mathf.Clamp(Ball.transform.position.y * botMoveSpeed, -playersYBounds, playersYBounds),
-                playerLeft.transform.position.z);
+            playerLeft.transform.position = new Vector3( playerLeft.transform.position.x,
+                Mathf.Clamp( Ball.transform.position.y * botMoveSpeed, -playersYBounds, playersYBounds ),
+                playerLeft.transform.position.z );
         }
-        else if (MenuManager.isVsPlayerGame)
+        else if( MenuManager.isVsPlayerGame )
         {
-            if (Input.touchCount == 1)
+            if( Input.touchCount == 1 )
             {
-                var touch = Input.GetTouch(0);
-                if (touch.position.x >= 1300)
+                var touch = Input.GetTouch( 0 );
+                if( touch.position.x >= 1300 )
                 {
 
-                    if (touch.phase == TouchPhase.Moved)
+                    if( touch.phase == TouchPhase.Moved )
                     {
-                        playerRight.transform.position = new Vector3(playerRight.transform.position.x,
-                           Mathf.Clamp(playerRight.transform.position.y + touch.deltaPosition.y * playerMoveSpeed, -playersYBounds, playersYBounds),
-                            playerRight.transform.position.z);
+                        playerRight.transform.position = new Vector3( playerRight.transform.position.x,
+                           Mathf.Clamp( playerRight.transform.position.y + touch.deltaPosition.y * playerMoveSpeed, -playersYBounds, playersYBounds ),
+                            playerRight.transform.position.z );
                     }
                 }
 
-                if (touch.position.x <= 1220)
+                if( touch.position.x <= 1220 )
                 {
-                    if (touch.phase == TouchPhase.Moved)
+                    if( touch.phase == TouchPhase.Moved )
                     {
-                        playerLeft.transform.position = new Vector3(playerLeft.transform.position.x,
-                            Mathf.Clamp(playerLeft.transform.position.y + touch.deltaPosition.y * playerMoveSpeed, -playersYBounds, playersYBounds),
-                             playerLeft.transform.position.z);
+                        playerLeft.transform.position = new Vector3( playerLeft.transform.position.x,
+                            Mathf.Clamp( playerLeft.transform.position.y + touch.deltaPosition.y * playerMoveSpeed, -playersYBounds, playersYBounds ),
+                             playerLeft.transform.position.z );
                     }
                 }
             }
-            else if (Input.touchCount > 0)
+            else if( Input.touchCount > 0 )
             {
-                var touch_1 = Input.GetTouch(0);
-                var touch_2 = Input.GetTouch(1);
+                var touch_1 = Input.GetTouch( 0 );
+                var touch_2 = Input.GetTouch( 1 );
 
 
-                if (touch_1.position.x >= 1300)
+                if( touch_1.position.x >= 1300 )
                 {
 
-                    if (touch_1.phase == TouchPhase.Moved)
+                    if( touch_1.phase == TouchPhase.Moved )
                     {
-                        playerRight.transform.position = new Vector3(playerRight.transform.position.x,
-                           Mathf.Clamp(playerRight.transform.position.y + touch_1.deltaPosition.y * playerMoveSpeed, -playersYBounds, playersYBounds),
-                            playerRight.transform.position.z);
+                        playerRight.transform.position = new Vector3( playerRight.transform.position.x,
+                           Mathf.Clamp( playerRight.transform.position.y + touch_1.deltaPosition.y * playerMoveSpeed, -playersYBounds, playersYBounds ),
+                            playerRight.transform.position.z );
                     }
                 }
-                if (touch_1.position.x <= 1220)
+                if( touch_1.position.x <= 1220 )
                 {
-                    if (touch_1.phase == TouchPhase.Moved)
+                    if( touch_1.phase == TouchPhase.Moved )
                     {
-                        playerLeft.transform.position = new Vector3(playerLeft.transform.position.x,
-                                 Mathf.Clamp(playerLeft.transform.position.y + touch_1.deltaPosition.y * playerMoveSpeed, -playersYBounds, playersYBounds),
-                                  playerLeft.transform.position.z);
+                        playerLeft.transform.position = new Vector3( playerLeft.transform.position.x,
+                                 Mathf.Clamp( playerLeft.transform.position.y + touch_1.deltaPosition.y * playerMoveSpeed, -playersYBounds, playersYBounds ),
+                                  playerLeft.transform.position.z );
                     }
                 }
 
 
-                if (touch_2.position.x >= 1300)
+                if( touch_2.position.x >= 1300 )
                 {
 
-                    if (touch_2.phase == TouchPhase.Moved)
+                    if( touch_2.phase == TouchPhase.Moved )
                     {
-                        playerRight.transform.position = new Vector3(playerRight.transform.position.x,
-                            Mathf.Clamp(playerRight.transform.position.y + touch_2.deltaPosition.y * playerMoveSpeed, -playersYBounds, playersYBounds),
-                             playerRight.transform.position.z);
+                        playerRight.transform.position = new Vector3( playerRight.transform.position.x,
+                            Mathf.Clamp( playerRight.transform.position.y + touch_2.deltaPosition.y * playerMoveSpeed, -playersYBounds, playersYBounds ),
+                             playerRight.transform.position.z );
                     }
                 }
-                if (touch_2.position.x <= 1220)
+                if( touch_2.position.x <= 1220 )
                 {
-                    if (touch_2.phase == TouchPhase.Moved)
+                    if( touch_2.phase == TouchPhase.Moved )
                     {
-                        playerLeft.transform.position = new Vector3(playerLeft.transform.position.x,
-                               Mathf.Clamp(playerLeft.transform.position.y + touch_2.deltaPosition.y * playerMoveSpeed, -playersYBounds, playersYBounds),
-                                playerLeft.transform.position.z);
+                        playerLeft.transform.position = new Vector3( playerLeft.transform.position.x,
+                               Mathf.Clamp( playerLeft.transform.position.y + touch_2.deltaPosition.y * playerMoveSpeed, -playersYBounds, playersYBounds ),
+                                playerLeft.transform.position.z );
                     }
                 }
             }
@@ -284,33 +284,33 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void IncreaseScore(int amount)
+    public void IncreaseScore( int amount )
     {
         rightScore++;
-        OnScore(rightScore);
+        OnScore( rightScore );
         textRightScore.text = "" + rightScore;
     }
 
-    private void SendAchivementProgress(int score)
+    private void SendAchivementProgress( int score )
     {
-        if (MenuManager.instance.isConnectedToGooglePlayServies)
+        if( MenuManager.instance.isConnectedToGooglePlayServies )
         {
-            switch (score)
+            switch( score )
             {
                 case 10:
-                    Social.ReportProgress(GPGSIds.achievement_10_score, 100.0f, null);
+                    Social.ReportProgress( GPGSIds.achievement_10_score, 100.0f, null );
                     break;
 
                 case 25:
-                    Social.ReportProgress(GPGSIds.achievement_25_score, 100.0f, null);
+                    Social.ReportProgress( GPGSIds.achievement_25_score, 100.0f, null );
                     break;
 
                 case 50:
-                    Social.ReportProgress(GPGSIds.achievement_50_score, 100.0f, null);
+                    Social.ReportProgress( GPGSIds.achievement_50_score, 100.0f, null );
                     break;
 
                 case 100:
-                    Social.ReportProgress(GPGSIds.achievement_100_score, 100.0f, null);
+                    Social.ReportProgress( GPGSIds.achievement_100_score, 100.0f, null );
                     break;
 
                 default:
@@ -319,40 +319,40 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Not signed in .. unable to report score");
+            Debug.Log( "Not signed in .. unable to report score" );
         }
     }
 
     public void GameOverWallGame()
     {
         isGameOver = true;
-        GameOverButton.SetActive(true);
-        if (MenuManager.isSoundsOn)
+        GameOverButton.SetActive( true );
+        if( MenuManager.isSoundsOn )
         {
             Handheld.Vibrate();
-            animator.SetTrigger("shake");
+            animator.SetTrigger( "shake" );
         }
         textRightScore.text = "GAME OVER";
 
-        SendAchivementProgress(rightScore);
+        SendAchivementProgress( rightScore );
 
-        if (MenuManager.instance.isConnectedToGooglePlayServies)
+        if( MenuManager.instance.isConnectedToGooglePlayServies )
         {
-            Social.ReportScore(rightScore, GPGSIds.leaderboard_top_score, (success) =>
+            Social.ReportScore( rightScore, GPGSIds.leaderboard_top_score, ( success ) =>
             {
-                if (!success)
+                if( !success )
                 {
-                    Debug.LogError("Unable to post highscore!");
+                    Debug.LogError( "Unable to post highscore!" );
                 }
-            });
+            } );
         }
         else
         {
-            Debug.Log("Not signed in .. unable to report score");
+            Debug.Log( "Not signed in .. unable to report score" );
         }
 
-        if (rightScore > MenuManager.instance.bestScore)
-        {        
+        if( rightScore > MenuManager.instance.bestScore )
+        {
             middleText.text = "NEW HIGHSCORE!\nYour Score: " + rightScore + "\nBest Score: " + MenuManager.instance.bestScore;
             MenuManager.instance.bestScore = rightScore;
             MenuManager.instance.Save();
@@ -362,20 +362,31 @@ public class GameManager : MonoBehaviour
             middleText.text = "Your Score: " + rightScore + "\nBest Score: " + MenuManager.instance.bestScore;
         }
 
+        if( rightScore >= 50 )
+        {
+            SaveData.Instance.Got50Points = true;
+            SaveData.Instance.Save();
+        }
     }
 
-    public void GameOver(string whoWin)
+    public void GameOver( string whoWin )
     {
-        if (MenuManager.isVsPlayerGame)
-            for (int i = 0; i < DifficultyMode.Length; i++)
-                DifficultyMode[i].SetActive(false);
+        if( MenuManager.isVsPlayerGame )
+            for( int i = 0; i < DifficultyMode.Length; i++ )
+                DifficultyMode[i].SetActive( false );
 
         isGameOver = true;
-        GameOverButton.SetActive(true);
-        if (MenuManager.isSoundsOn)
+        GameOverButton.SetActive( true );
+        if( MenuManager.isSoundsOn )
         {
             Handheld.Vibrate();
-            animator.SetTrigger("shake");
+            animator.SetTrigger( "shake" );
+        }
+
+        if( MenuManager.isVsBotGame && whoWin == "2" )
+        {
+            SaveData.Instance.WinVsBot = true;
+            SaveData.Instance.Save();
         }
 
         middleText.text = "PLAYER " + whoWin + " WINS";
@@ -386,6 +397,6 @@ public class GameManager : MonoBehaviour
         isPaused = false;
         isGameOver = false;
         Time.timeScale = 1;
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene( 0 );
     }
 }
